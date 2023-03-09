@@ -13,38 +13,36 @@ struct data {
 int main() {
     std::vector<data> data_job;
     std::string command, job;
-    int i = -1;
 
     do {
         std::cout << "Enter the command (begin/end/status/exit):";
         std::cin >> command;
         if (command == "begin") {
-            i++;
-            data_job.resize(i);
             if (data_job.empty()) {
-                data_job.push_back(data());
+                data d;     // Очень хороший способ заполнять вектор, жаль что я сам не сообразил.
                 std::cout << "Enter the name of the task:";
                 std::cin >> job;
                 std::time_t t = std::time(nullptr);
-                data_job[i].name = job;
-                data_job[i].begin_job = t;
+                d.name = job;
+                d.begin_job = t;
+                data_job.push_back(d);
             }
             else {
-                data_job.push_back(data());
-                if (data_job[i - 1].end_job == 0) {
+                if (data_job.back().end_job == 0) { // .back() и этот способ тоже обязательно запомню)
                     std::time_t t_end = std::time(nullptr);
-                    data_job[i - 1].end_job = t_end;
+                    data_job.back().end_job = t_end;
                 }
+                data_job.push_back(data());
                 std::cout << "Enter the name of the task:";
                 std::cin >> job;
                 std::time_t t_start = std::time(nullptr);
-                data_job[i].name = job;
-                data_job[i].begin_job = t_start;
+                data_job.back().name = job;
+                data_job.back().begin_job = t_start;
             }
         }
         else if (command == "end" ) {
            std::time_t t_end = std::time(nullptr);
-           data_job[i].end_job = t_end;
+           data_job.back().end_job = t_end;
         }
         else if (command == "status" ) {
             if (data_job.empty()) {
